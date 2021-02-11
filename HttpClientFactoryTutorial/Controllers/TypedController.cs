@@ -1,9 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using System;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
 using System.Threading.Tasks;
 using HttpClientFactoryTutorial.TypedClients;
 
@@ -21,17 +17,38 @@ namespace HttpClientFactoryTutorial.Controllers
             _mockyClient = mockyClient;
         }
 
-        [HttpGet]
-        public async Task<ActionResult> Get()
+        [HttpGet("GoodGet")]
+        public async Task<ActionResult> GoodGet()
         {
-            var result = await _mockyClient.GetData();
+            string result = string.Empty;
+            try
+            {
+                result = await _mockyClient.GetData();
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                
+            }
+           
             return Ok(result);
         }
 
         [HttpGet("BadGet")]
         public async Task<ActionResult> BadGet()
         {
-            var result = await _mockyClient.GetBadData();
+            string result = string.Empty;
+            try
+            {
+                result = await _mockyClient.GetBadData();
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+
+            }
             return Ok(result);
         }
     }

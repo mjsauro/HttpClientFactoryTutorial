@@ -2,7 +2,7 @@
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace HttpClientFactoryTutorial.TypedClients
+namespace Clients.TypedClients
 {
     public interface IMockyClient
     {
@@ -16,7 +16,7 @@ namespace HttpClientFactoryTutorial.TypedClients
         public MockyClient(HttpClient httpClient)
         {
             httpClient.BaseAddress = new Uri("https://run.mocky.io/v3/");
-            httpClient.DefaultRequestHeaders.Add("Accept", "application/vnd.github.v3+json");
+            httpClient.DefaultRequestHeaders.Add("Accept", "application/json");
             httpClient.DefaultRequestHeaders.Add("User-Agent", "HttpClientFactory-Sample");
             _client = httpClient;
         }

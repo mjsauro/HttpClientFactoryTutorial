@@ -5,7 +5,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
 using System.Net.Http;
-using HttpClientFactoryTutorial.TypedClients;
+using Clients.TypedClients;
+using Hangfire;
+using Hangfire.SqlServer;
 using Polly;
 using Polly.Extensions.Http;
 
@@ -23,6 +25,20 @@ namespace HttpClientFactoryTutorial
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddHangfire(configuration => configuration
+                .SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
+                .UseSimpleAssemblyNameTypeSerializer()
+                .UseRecommendedSerializerSettings()
+                .UseSqlServerStorage(Configuration.GetConnectionString("HangfireConnection"), new SqlServerStorageOptions
+                {
+                    CommandBatchMaxTimeout = TimeSpan.FromMinutes(5),
+                    SlidingInvisibilityTimeout = TimeSpan.FromMinutes(5),
+                    QueuePollInterval = TimeSpan.Zero,
+                    UseRecommendedIsolationLevel = true,
+                    DisableGlobalLocks = true
+                }));
+            services.AddHangfireServer();
+
             services.AddControllers();
             
             services.AddSwaggerGen();
@@ -35,6 +51,12 @@ namespace HttpClientFactoryTutorial
                 c.DefaultRequestHeaders.Add("User-Agent", "HttpClientFactory-Sample");
             });
             services.AddHttpClient<IMockyClient, MockyClient>()
+                .SetHandlerLifetime(TimeSpan.FromMinutes(1))
+                .AddPolicyHandler(GetRetryPolicy());
+            services.AddHttpClient<ITimeClient, TimeClient>()
+                .SetHandlerLifetime(TimeSpan.FromMinutes(1))
+                .AddPolicyHandler(GetRetryPolicy());
+            services.AddHttpClient<IIpClient, IpClient>()
                 .SetHandlerLifetime(TimeSpan.FromMinutes(1))
                 .AddPolicyHandler(GetRetryPolicy());
         }
@@ -63,6 +85,7 @@ namespace HttpClientFactoryTutorial
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHangfireDashboard();
             });
         }
 

@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
-using HttpClientFactoryTutorial.TypedClients;
+using Clients.TypedClients;
 
 namespace HttpClientFactoryTutorial.Controllers
 {
@@ -11,7 +11,7 @@ namespace HttpClientFactoryTutorial.Controllers
     {
 
         private readonly IMockyClient _mockyClient;
-
+        
         public TypedController(IMockyClient mockyClient)
         {
             _mockyClient = mockyClient;
@@ -24,7 +24,6 @@ namespace HttpClientFactoryTutorial.Controllers
             try
             {
                 result = await _mockyClient.GetData();
-
             }
             catch (Exception ex)
             {

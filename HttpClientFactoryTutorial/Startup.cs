@@ -40,7 +40,7 @@ namespace HttpClientFactoryTutorial
             services.AddHangfireServer();
 
             services.AddControllers();
-            
+
             services.AddSwaggerGen();
 
             services.AddHttpClient();
@@ -72,11 +72,7 @@ namespace HttpClientFactoryTutorial
 
             app.UseSwagger();
 
-            app.UseSwaggerUI(c =>
-            {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
-
-            });
+            app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1"));
 
             app.UseRouting();
 
@@ -95,8 +91,8 @@ namespace HttpClientFactoryTutorial
             return HttpPolicyExtensions
                 .HandleTransientHttpError()
                 .OrResult(msg => msg.StatusCode == System.Net.HttpStatusCode.NotFound)
-                .WaitAndRetryAsync(1, 
-                    retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)) 
+                .WaitAndRetryAsync(1,
+                    retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt))
                                 + TimeSpan.FromMilliseconds(jitterer.Next(0, 100)));
         }
     }

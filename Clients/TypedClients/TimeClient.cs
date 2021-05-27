@@ -50,7 +50,7 @@ namespace Clients.TypedClients
         public async Task<string> GetCurrentTimeInTimezone(string area, string location)
         {
             string responseString = string.Empty;
-            
+
             try
             {
                 var response = await _client.GetAsync($"timezone/{area}/{location}");
@@ -76,14 +76,14 @@ namespace Clients.TypedClients
 
             try
             {
-               var response = await _client.GetAsync($"ip/{ipAddress}");
-               if (response.IsSuccessStatusCode)
-               {
-                   responseString = await response.Content.ReadAsStringAsync();
-                   var result = JsonConvert.DeserializeObject<IpAddress>(responseString);
-                   Console.WriteLine(JsonConvert.SerializeObject(result, Formatting.Indented));
+                var response = await _client.GetAsync($"ip/{ipAddress}");
+                if (response.IsSuccessStatusCode)
+                {
+                    responseString = await response.Content.ReadAsStringAsync();
+                    var result = JsonConvert.DeserializeObject<IpAddress>(responseString);
+                    Console.WriteLine(JsonConvert.SerializeObject(result, Formatting.Indented));
 
-               }
+                }
             }
             catch (Exception e)
             {

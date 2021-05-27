@@ -11,7 +11,7 @@ namespace HttpClientFactoryTutorial.Controllers
     {
 
         private readonly IMockyClient _mockyClient;
-        
+
         public TypedController(IMockyClient mockyClient)
         {
             _mockyClient = mockyClient;
@@ -28,9 +28,9 @@ namespace HttpClientFactoryTutorial.Controllers
             catch (Exception ex)
             {
                 Console.WriteLine(ex);
-                
+
             }
-           
+
             return Ok(result);
         }
 
